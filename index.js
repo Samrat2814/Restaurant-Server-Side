@@ -65,15 +65,38 @@ async function run() {
       try {
         // Getting the logged-in user's email from the query parameters
         const userEmail = req.query.email;
-        console.log('Received email:', userEmail);
+        // console.log("Received email:", userEmail);
 
         if (!userEmail) {
           return res.status(400).send({ message: "Email is required" });
         }
 
-        const query = { "addBy.email": userEmail}; // Accessing the email field inside the 'addedBy' object
+        const query = { "addBy.email": userEmail }; // Accessing the email field inside the 'addedBy' object
         const result = await itemCollection.find(query).toArray();
-        console.log(result)
+        console.log(result);
+
+        // Sending the result as a response
+        res.send(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: "Server error", error: err.message });
+      }
+    });
+
+    // my orders api
+    app.get("/my-orders", async (req, res) => {
+      try {
+        // Getting the logged-in user's email from the query parameters
+        const userEmail = req.query.email;
+        console.log("Received email:", userEmail);
+
+        if (!userEmail) {
+          return res.status(400).send({ message: "Email is required" });
+        }
+
+        const query = { "buyerEmail": userEmail }; // Accessing the email field inside the 'addedBy' object
+        const result = await PurchaseItemCollection.find(query).toArray();
+        console.log(result);
 
         // Sending the result as a response
         res.send(result);
